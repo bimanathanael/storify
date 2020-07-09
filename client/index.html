@@ -1,68 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
     <!-- Google-OAuth-Part -->
     <meta name="google-signin-client_id" content="271576244942-eg5a18rc84jbotm18p0jfv9iqedce97h.apps.googleusercontent.com">
     <!-- Google-OAuth-Part -->
-    
-    <title>Homeey</title>
-    <!-- CSS only -->
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-</head>
-<body class="container ">
-    <div class="container row justify-content-md-center">
-        <button type="button" class="btn btn-danger" id="logout" onclick="processLogout(event)">Logout</button>
-    </div>
-    <hr>
-    <hr>
-    <div class="container mt-5 border p-3" id="loginForm">
-        <div class="row justify-content-md-center">
-            <div class="col-md-5" id="loginCard">
-                <h2> Login </h2>
-                <label class="badge badge-danger text-wrap" id="errorLogin" > error </label>
-                <form onsubmit="processLogin(event)">
-                    <div class="col-md-auto">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Email</span>
-                            </div>
-                            <input id="emailLogin" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Password</span>
-                            </div>
-                            <input id="passwordLogin" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="row justify-content-md-center">
-                            <button type="submit" class="btn btn-primary">Login</button>
+    <title>Storify</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="https://i.imgur.com/ZbYFtgn.png" />
+  </head>
 
-                            <!-- Google-OAuth-Part -->
-                            <div class="g-signin2 ml-2" data-onsuccess="onSignIn"></div>
-                            <!-- Google-OAuth-Part -->
-
-                            <a class="btn btn-warning ml-5" onclick="showRegister()"> click to register </a>
-                        </div>
-                    </div>
-                </form>
-            </div>
+  <body>
+      <!-- navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Storify</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Features</a>
+          </div>
         </div>
-    </div>
+        <button class="btn btn-danger" id="logout">Logout</button>
+      </nav>
 
-    <!-- Google-OAuth-Part -->
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <!-- Google-OAuth-Part -->
+      <!-- register -->
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-sm-4" id="register-form">
+            <form class="mt-3" onsubmit="afterRegister(event)">
+                <h4 style="text-align: center;">Register</h4>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="emailRegister" aria-describedby="emailHelp">
+                    <small id="emailHelpRegister" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="passwordRegister">
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button> <br><br>
+                <h5>already have an account? <a class="navbar-brand" href="#" onclick="loginProcess()"> Click here</a></h5>
+            </form>
+          </div>
 
+          <!-- login -->
+          <div class="col-sm-4" id="login-form">
+            <form class="mt-3">
+                <h4 style="text-align: center;">Login</h4>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="emailRegister" aria-describedby="emailHelp">
+                    <small id="emailHelpRegister" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="passwordRegister">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button> <br><br>
+              
+                <!-- Google-OAuth-Part -->
+                <div class="g-signin2 ml-2" data-onsuccess="onSignIn"></div>
+                <!-- Google-OAuth-Part -->
+              
+            </form>
+          </div>
+          
+          <!-- card -->
+          <div class="card-group mt-5" id="content-card">
+              <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header" style="text-align: center;">Header</div>
+                <div class="card-body">
+                  <h5 class="card-title">Light card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">more</a>
+                </div>
+              </div>
+              <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header" style="text-align: center;">Header</div>
+                <div class="card-body">
+                  <h5 class="card-title">Light card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">more</a>
+                </div>
+              </div>
+              <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header" style="text-align: center;">Header</div>
+                <div class="card-body">
+                  <h5 class="card-title">Light card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">more</a>
+                </div>
+              </div>
+              <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header" style="text-align: center;">Header</div>
+                <div class="card-body">
+                  <h5 class="card-title">Light card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">more</a>
+                </div>
+              </div>    
+          </div>
+          
+          <!-- Form Add -->
+          <div class="container mb-4 row justify-content-md-center mt-4">
+              <button type="button" class="btn btn-primary" id="add-button" onclick="showAddToDo(event)">Add Storify</button>
+          </div>
+          <div class="col-sm-5" id="form-add">
+            <form class="register-form mt-3">
+                <h4 style="text-align: center;">Add Storify</h4>
+                <label class="badge badge-danger text-wrap" id="add-error"> error </label>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Title</label>
+                    <input type="text" class="form-control" id="title">
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea rows="4" cols="53" name="content" id="content" form="usrform" placeholder="Enter text here.."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="qrCode">QR Code</label>
+                    <input type="text" class="form-control" id="qrCode">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button> <br><br>
+            </form>
+          </div>
+      
+      <!-- JQuery -->
+      <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"></script>
+          
+      <!-- Google-OAuth-Part -->
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <!-- Google-OAuth-Part -->
+          
+      <!-- main.js -->
+      <script src="main.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="main.js"></script>
-</body>
+  </body>
 </html>
