@@ -14,10 +14,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Story.init({
-    title: DataTypes.STRING,
-    content: DataTypes.TEXT,
-    qrCode: DataTypes.STRING,
-    UserId: DataTypes.INTEGER
+    title:{type: DataTypes.STRING,
+      validate:{
+        notEmpty:{
+          args: true,
+          msg: "Title cannot empty!"
+        }}
+    },
+    content:{type: DataTypes.TEXT,
+      validate:{
+        notEmpty:{
+          args: true,
+          msg: "Content cannot empty!"
+        }}} ,
+    qrCode: {type: DataTypes.TEXT,
+      validate:{
+        notEmpty:{
+          args: true,
+          msg: "QRCode cannot empty!"
+        }}} ,
+    UserId:{type: DataTypes.INTEGER,
+      validate:{
+        isNumeric:{
+          args: true,
+          msg: "Wrong format UserId!"
+        }}} 
   }, {
     sequelize,
     modelName: 'Story',
