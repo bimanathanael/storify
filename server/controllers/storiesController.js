@@ -1,5 +1,5 @@
 const { Story } = require('../models')
-const doMail = require('../helper/mailGun')
+const doMail = require('../helpers/mailGun')
 
 
 class StoriesController{
@@ -8,16 +8,17 @@ class StoriesController{
             title: req.body.title,
             content: req.body.content,
             qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${req.body.content}`,
-            // UserId harusnya dari access_token 
-            UserId: 1,
+            UserId : req.userData
         }
         Story.create(newStory)
         .then( data => {
+            console.log('asdasdas')
             doMail(data)
             res.status(201).json(data)
         })
         .catch( err => {
-            res.send(err)
+            console.log(err)
+            next(err)
         })
     }
 
@@ -27,7 +28,7 @@ class StoriesController{
             res.status(201).json(data)
         })
         .catch( err => {
-            res.send(err)
+            next(err)
         })
     }
 
@@ -38,7 +39,7 @@ class StoriesController{
             res.status(201).json(data)
         })
         .catch( err => {
-            res.send(err)
+            next(err)
         })
     }
 }
