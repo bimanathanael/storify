@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       qrCode: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       UserId: {
         type: Sequelize.INTEGER
