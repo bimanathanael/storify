@@ -7,7 +7,7 @@ class StoriesController{
         const newStory = {
             title: req.body.title,
             content: req.body.content,
-            qrCode: req.body.qrCode,
+            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${req.body.content}`,
             // UserId harusnya dari access_token 
             UserId: 1,
         }
