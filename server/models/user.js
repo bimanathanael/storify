@@ -1,4 +1,5 @@
 'use strict';
+const {hashPassword} = require('../helpers/bcrypt')
 const {
   Model
 } = require('sequelize');
@@ -14,9 +15,50 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    email:{
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        notEmpty:{
+          args: true,
+          msg: "Email cannot empty!"
+        },
+        notNull:{
+          args: true,
+          msg: "email cannot empty!"
+        },
+        isEmail:{
+          args: true,
+          msg: "Wrong email format!"
+        },
+        async checkEmail(email){
+          const data = await User.findOne({where:{email: email} })
+          if(data){
+            throw new Error(`this email has been registered`)
+          }
+        }
+      }
+    } ,
+    password:{
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        notEmpty:{
+          args: true,
+          msg: "Password cannot empty"
+        },
+        notNull:{
+          args: true,
+          msg: "Password cannot empty!"
+        }
+      }
+    } 
   }, {
+    hooks:{
+      beforeCreate:(value, options) =>{
+        value.password = hashPassword(value.password)
+      }
+    },
     sequelize,
     modelName: 'User',
   });
