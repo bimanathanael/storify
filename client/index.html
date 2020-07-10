@@ -22,17 +22,35 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-
+ <!-- Front page CSS -->
+    <link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
   <title>Storify</title>
   <!-- Favicon-->
   <link rel="icon" type="image/x-icon" href="https://i.imgur.com/ZbYFtgn.png" />
 </head>
 
-<body>
+<body  class="is-preload">
+
+  <!-- front page -->
+  <div id="front-page" class="divided">
+
+    <section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+      <div class="content">
+        <h1 >Storify</h1>
+        <p class="major">The best place to telling all your story</p>
+        <p class="major">Let's join with us!</p>
+        <button type="button" class="btn btn-outline-secondary" onclick="frontPage()">Sign Up for free</button>
+      </div>
+      <div class="image">
+        <img src="images/storyteller.jpg" alt="" />
+      </div>
+    </section>				
+</div>
   <!-- navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar-storify">
     <a class="navbar-brand" href="#">
-      <h1 class="text-info">Storify</h1>
+      <h1  class="text-info">Storify</h1>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +105,7 @@
 
           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="First group">
-              <button type="submit" class="btn btn-info">Login</button>
+              <button type="submit" class="btn btn-info btn-sm">Login</button>
             </div>
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <div class="g-signin2 ml-2" data-onsuccess="onSignIn"></div>
@@ -104,28 +122,51 @@
 
   <!-- Form Add -->
   <div class="container mb-4 row justify-content-md-center mt-4">
-    <button type="button" class="btn btn-info" id="add-button" onclick="showFromAdd(event)">Add Storify</button>
+    <button type="button" class="btn btn-info" id="add-button" onclick="showFromAdd(event)" style="padding: 0px 5px !important;">Add Storify</button>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="form-add-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 class="text-info" id="message-success">Success Add Story</h3>
+          <div id="form-add">
+            <form class="register-form mt-3" onsubmit="add(event)" >
+              <h4 style="text-align: center;">Add Storify</h4>
+              <label class="badge badge-danger text-wrap" id="error-add"> error </label>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="Input Story's Title here..">
+              </div>
+              <div class="form-group">
+                <label for="content">Content</label>
+                <textarea rows="4" cols="53" name="content" id="content" form="usrform"
+                  placeholder="Write your Story here.."></textarea>
+              </div>
+              <button type="submit" class="btn btn-info">Submit</button> <br><br>
+            </form>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- card -->
   <div class="container">
     <div class="card-group mt-5 ml-2" id="card-storify">
-    </div>
-    <div class="col-sm-5" id="form-add">
-      <form class="register-form mt-3" onsubmit="add(event)">
-        <h4 style="text-align: center;">Add Storify</h4>
-        <label class="badge badge-danger text-wrap" id="error-add"> error </label>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Title</label>
-          <input type="text" class="form-control" id="title" placeholder="Input Story's Title here..">
-        </div>
-        <div class="form-group">
-          <label for="content">Content</label>
-          <textarea rows="4" cols="53" name="content" id="content" form="usrform"
-            placeholder="Write your Story here.."></textarea>
-        </div>
-        <button type="submit" class="btn btn-info">Submit</button> <br><br>
-      </form>
     </div>
   </div>
 
@@ -136,7 +177,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="storify-label">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="stopVoice(event)">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -164,6 +205,7 @@
     </div>
   </div>
 
+
   <!-- Google-OAuth-Part -->
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!-- Google-OAuth-Part -->
@@ -172,6 +214,17 @@
   <script src="https://code.responsivevoice.org/responsivevoice.js?key=VCVp0Dno"></script>
   <!-- main.js -->
   <script src="main.js"></script>
+
+  <!-- front page js -->
+  <script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script>
+      
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
 

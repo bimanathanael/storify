@@ -11,9 +11,9 @@ function afterLogin() {
   $("#register-form").hide()
   $("#login-form").hide()
   $("#logout").show()
-
+  $('#front-page').hide()
   $("#card-storify").show()
-  $("#form-add").hide()
+  // $("#form-add").hide()
   $("#add-button").show()
   // $("#card-detail").hide()
   // $("#detail-button").hide()
@@ -30,12 +30,13 @@ function afterLogin() {
 
 function beforeLogin() {
   $("#register-form").hide()
-  $("#login-form").show()
+  $("#login-form").hide()
   $("#logout").hide()
-
+  $('#front-page').show()
   $("#card-storify").hide()
   $("#form-add").hide()
   $("#add-button").hide()
+  $('#navbar-storify').hide()
   // $("#card-detail").hide()
   // $("#detail-button").hide()
   // $("#tts-button").hide()
@@ -43,6 +44,11 @@ function beforeLogin() {
   $('#error-add').hide()
   $('#error-login').hide()
   $('#error-register').hide()
+}
+function frontPage(){
+  $('#front-page').hide()
+  $('#navbar-storify').show()
+  $("#register-form").show()
 }
 
 // Google-OAuth-Part
@@ -71,61 +77,6 @@ function onSignIn(googleUser) {
     .always(() => {
     })
 }
-
-// Text to speech
-// function playSound() {
-//   var text = document.getElementById("text-input").value;
-//   responsiveVoice.speak(text);
-// }
-
-// function getStorify() {
-//   // let tesInput = "Some quick example text to build on the card title and make up the bulk of the card's content."
-
-//   // let tesData = [
-//   //   {
-//   //     id: 1,
-//   //     judul: "si kucing",
-//   //     nama: "tom"
-//   //   },
-//   //   {
-//   //     id: 2,
-//   //     judul: "kata tambahan",
-//   //     nama: "and"
-//   //   },
-//   //   {
-//   //     id: 3,
-//   //     judul: "si tikus",
-//   //     nama: "jerry"
-//   //   },
-//   //   {
-//   //     id: 4,
-//   //     judul: "si beruang",
-//   //     nama: "You know you're in love when you can't fall asleep because reality is finally better than your dreams."
-//   //   }
-//   // ]
-
-//   $("#content-card").empty()
-
-//   // LOOPING DATA HASIL FETCH
-//   // el.nama buat masukin konten
-//   // el.id buat nentuin cerita nya
-//   // el.judul buat judul
-
-//   tesData.forEach(el => {
-//     $("#content-card").append(`
-//     <div class="card bg-light mb-3" style="max-width: 18rem;">
-//     <div class="card-header" style="text-align: center;">Header</div>
-//     <div class="card-body">
-//     <h5 class="card-title">${el.judul}</h5>
-//     <p class="card-text">${el.nama}</p>
-//     <input type="textarea" value="${el.nama}" hidden class="${el.id}">
-//     <button onclick="ngomongKek($('.${el.id}').val())" type="button" value="Play" class="btn btn-warning">Play</button>
-//     </div>
-//     </div>
-//     `)
-//   })
-// }
-
 function getStorify() {
   $('#card-storify').empty()
   $.ajax({
@@ -198,6 +149,9 @@ function processRegister(event) {
   })
     .done(storify => {
       beforeLogin()
+      $('#front-page').hide()
+      // $('#navbar-storify').show()
+      $("#login-form").show()
       console.log('Success Register');
     })
     .fail(err => {
@@ -238,6 +192,8 @@ function add(event) {
       $('#title').val("")
       $('#content').val("")
       $('#form-add').hide()
+      $('#message-success').show()
+      // $('#form-add-modal').hide()
     })
     .fail(err => {
       console.log("error", err.responseJSON)
@@ -276,7 +232,9 @@ function loginProcess(event) {
 function showFromAdd(event) {
   event.preventDefault()
   $("#form-add").show()
-  $("#add-button").hide()
+  // $("#add-button").hide()
+  $('#message-success').hide()
+  $('#form-add-modal').modal('show')
 }
 
 function back(event) {
