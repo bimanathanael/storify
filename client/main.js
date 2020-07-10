@@ -1,85 +1,141 @@
-$( document ).ready(function() {
-    if (localStorage.token) {
-        afterLogin()
-    } else {
-        beforeLogin()
-    }
-    $('#myModal').show()
+$(document).ready(function () {
+  if (localStorage.token) {
+    afterLogin()
+  } else {
+    beforeLogin()
+  }
+  $('#myModal').show()
 });
 
-function afterLogin () {
-    $("#register-form").hide()
-    $("#login-form").hide()
-    $("#logout").show()
+function afterLogin() {
+  $("#register-form").hide()
+  $("#login-form").hide()
+  $("#logout").show()
 
-    $("#card-storify").show()
-    $("#form-add").hide()
-    $("#add-button").show()
-    // $("#card-detail").hide()
-    // $("#detail-button").hide()
-    // $("#tts-button").hide()
-    
-    $('#error-add').hide()
-    $('#error-login').hide()
-    $('#error-register').hide()
+  $("#card-storify").show()
+  $("#form-add").hide()
+  $("#add-button").show()
+  // $("#card-detail").hide()
+  // $("#detail-button").hide()
+  // $("#tts-button").hide()
 
-    getStorify()
+  $('#error-add').hide()
+  $('#error-login').hide()
+  $('#error-register').hide()
+
+  $('#add-error').hide()
+
+  getStorify()
 }
 
-function beforeLogin () {
-    $("#register-form").hide()
-    $("#login-form").show()
-    $("#logout").hide()
+function beforeLogin() {
+  $("#register-form").hide()
+  $("#login-form").show()
+  $("#logout").hide()
 
-    $("#card-storify").hide()
-    $("#form-add").hide()
-    $("#add-button").hide()
-    // $("#card-detail").hide()
-    // $("#detail-button").hide()
-    // $("#tts-button").hide()  
-    
-    $('#error-add').hide()
-    $('#error-login').hide()
-    $('#error-register').hide()
+  $("#card-storify").hide()
+  $("#form-add").hide()
+  $("#add-button").hide()
+  // $("#card-detail").hide()
+  // $("#detail-button").hide()
+  // $("#tts-button").hide()
+
+  $('#error-add').hide()
+  $('#error-login').hide()
+  $('#error-register').hide()
 }
 
 // Google-OAuth-Part
-function processLogout(event){
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
+function processLogout(event) {
+  const auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
 }
 
 function onSignIn(googleUser) {
-    var id_token = googleUser.getAuthResponse().id_token;
-    $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/googleSignin",
-        data : {id_token}
+  var id_token = googleUser.getAuthResponse().id_token;
+  $.ajax({
+    method: "POST",
+    url: "http://localhost:3000/googleSignin",
+    data: { id_token }
+  })
+    .done(todos => {
+      localStorage.token = todos.access_token
     })
-    .done( todos => {
-        localStorage.token = todos.access_token
+    .fail(err => {
+      console.log(err)
     })
-    .fail ( err => {
-        console.log(err)
-    })
-    .always ( () => {
+    .always(() => {
     })
 }
 
-function getStorify () {
-    $('#card-storify').empty()
-    $.ajax({
-        method: "GET",
-        url : "http://localhost:3000/stories/",
-        headers : {
-            access_token: localStorage.token
-        }
-    })
-    .done( storify => {
-        storify.forEach(item => { 
-            $('#card-storify').append(`
+// Text to speech
+// function playSound() {
+//   var text = document.getElementById("text-input").value;
+//   responsiveVoice.speak(text);
+// }
+
+// function getStorify() {
+//   // let tesInput = "Some quick example text to build on the card title and make up the bulk of the card's content."
+
+//   // let tesData = [
+//   //   {
+//   //     id: 1,
+//   //     judul: "si kucing",
+//   //     nama: "tom"
+//   //   },
+//   //   {
+//   //     id: 2,
+//   //     judul: "kata tambahan",
+//   //     nama: "and"
+//   //   },
+//   //   {
+//   //     id: 3,
+//   //     judul: "si tikus",
+//   //     nama: "jerry"
+//   //   },
+//   //   {
+//   //     id: 4,
+//   //     judul: "si beruang",
+//   //     nama: "You know you're in love when you can't fall asleep because reality is finally better than your dreams."
+//   //   }
+//   // ]
+
+//   $("#content-card").empty()
+
+//   // LOOPING DATA HASIL FETCH
+//   // el.nama buat masukin konten
+//   // el.id buat nentuin cerita nya
+//   // el.judul buat judul
+
+//   tesData.forEach(el => {
+//     $("#content-card").append(`
+//     <div class="card bg-light mb-3" style="max-width: 18rem;">
+//     <div class="card-header" style="text-align: center;">Header</div>
+//     <div class="card-body">
+//     <h5 class="card-title">${el.judul}</h5>
+//     <p class="card-text">${el.nama}</p>
+//     <input type="textarea" value="${el.nama}" hidden class="${el.id}">
+//     <button onclick="ngomongKek($('.${el.id}').val())" type="button" value="Play" class="btn btn-warning">Play</button>
+//     </div>
+//     </div>
+//     `)
+//   })
+// }
+
+function getStorify() {
+  $('#card-storify').empty()
+  $.ajax({
+    method: "GET",
+    url: "http://localhost:3000/stories/",
+    headers: {
+      access_token: localStorage.token
+    }
+  })
+    .done(storify => {
+      storify.forEach(item => {
+        $('#card-storify').append(`
             <div class="col-3">
             <div class="card bg-light mb-3" style="max-width: 18rem;" id="card-1">
                 <div class="card-header bg-info" style="text-align: center;">${item.title}</div>
@@ -92,174 +148,183 @@ function getStorify () {
             </div>
 
             `)
-        });
-        console.log(storify);
+      });
+      console.log(storify);
     })
-    .fail ( err => {
-        console.log("Error:" , err)
+    .fail(err => {
+      console.log("Error:", err)
     })
-    .always ( () => {
-    })
-}
-
-function processLogin(event){    
-    event.preventDefault();
-
-    $.ajax({
-        method: "POST",
-        url : "http://localhost:3000/users/login",
-        data : {
-            email : $('#emailLogin').val(),
-            password: $('#passwordLogin').val()
-        }
-    })
-    .done( storify => {
-        localStorage.token = storify.access_token
-        afterLogin()
-    })
-    .fail ( err => {
-        $('#error-login').text(err.responseJSON.message).show()
-        console.log("Error:" , err)
-    })
-    .always ( () => {
-        $('#emailLogin').val('')
-        $('#passwordLogin').val('')
+    .always(() => {
     })
 }
 
-function processRegister(event){    
-    event.preventDefault();
+function processLogin(event) {
+  event.preventDefault();
 
-    $.ajax({
-        method: "POST",
-        url : "http://localhost:3000/users/register",
-        data : {
-            email : $('#emailRegister').val(),
-            password: $('#passwordRegister').val()
-        }
-    })
-    .done( storify => {
-        beforeLogin()
-        console.log('Success Register');
-    })
-    .fail ( err => {
-        $('#error-register').text(err.responseJSON.message).show()
-        console.log("Error:" , err)
-    })
-    .always ( () => {
-        $('#emailRegister').val('')
-        $('#passwordRegister').val('')
-    })
-}
-
-function add (event) {
-    event.preventDefault()
-    $('#card-storify').hide()
-    $('#add-button').hide()
-    $('#form-add').show()
-
-    const newStorify = {
-        title: $('#title').val(),
-        content: $('#content').val(),
+  $.ajax({
+    method: "POST",
+    url: "http://localhost:3000/users/login",
+    data: {
+      email: $('#emailLogin').val(),
+      password: $('#passwordLogin').val()
     }
-    console.log(newStorify)
-    $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/stories/",
-        data: {
-            title: newStorify.title,
-            content: newStorify.content,
-        },
-        headers:{
-            access_token : localStorage.token
-        }
+  })
+    .done(storify => {
+      localStorage.token = storify.access_token
+      afterLogin()
     })
-    .done( data => {
-        console.log("success add ", data)
-        afterLogin()
+    .fail(err => {
+      $('#error-login').text(err.responseJSON.message).show()
+      console.log("Error:", err)
     })
-    .fail ( err => {
-        console.log("error", err.responseJSON)
-        $('#error-add').text(err.responseJSON.message).show()
-        $('#card-storify').show()
+    .always(() => {
+      $('#emailLogin').val('')
+      $('#passwordLogin').val('')
     })
-    .always ( () => {
-        console.log("ini always")
+}
+
+function processRegister(event) {
+  event.preventDefault();
+
+  $.ajax({
+    method: "POST",
+    url: "http://localhost:3000/users/register",
+    data: {
+      email: $('#emailRegister').val(),
+      password: $('#passwordRegister').val()
+    }
+  })
+    .done(storify => {
+      beforeLogin()
+      console.log('Success Register');
+    })
+    .fail(err => {
+      $('#error-register').text(err.responseJSON.message).show()
+      console.log("Error:", err)
+    })
+    .always(() => {
+      $('#emailRegister').val('')
+      $('#passwordRegister').val('')
+    })
+}
+
+function add(event) {
+  event.preventDefault()
+  $('#card-storify').hide()
+  $('#add-button').hide()
+  $('#form-add').show()
+
+  const newStorify = {
+    title: $('#title').val(),
+    content: $('#content').val(),
+  }
+  console.log(newStorify)
+  $.ajax({
+    method: "POST",
+    url: "http://localhost:3000/stories/",
+    data: {
+      title: newStorify.title,
+      content: newStorify.content,
+    },
+    headers: {
+      access_token: localStorage.token
+    }
+  })
+    .done(data => {
+      console.log("success add ", data)
+      afterLogin()
+      $('#title').val("")
+      $('#content').val("")
+    })
+    .fail(err => {
+      console.log("error", err.responseJSON)
+      $('#error-add').text(err.responseJSON.message).show()
+      $('#card-storify').show()
+    })
+    .always(() => {
+      console.log("ini always")
     })
 
 }
 
-function logOut(event){
-    event.preventDefault()
+function logOut(event) {
+  event.preventDefault()
 
-    localStorage.clear() 
-    beforeLogin()
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
+  localStorage.clear()
+  beforeLogin()
+  const auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
 }
 
 function registerProcess(event) {
-    event.preventDefault()
-    $("#register-form").show()
-    $("#login-form").hide()
+  event.preventDefault()
+  $("#register-form").show()
+  $("#login-form").hide()
 }
 
 function loginProcess(event) {
-    event.preventDefault()
-    $("#register-form").hide()
-    $("#login-form").show()
+  event.preventDefault()
+  $("#register-form").hide()
+  $("#login-form").show()
 }
 
 function showFromAdd(event) {
-    event.preventDefault()
-    $("#form-add").show()
-    $("#add-button").hide()
+  event.preventDefault()
+  $("#form-add").show()
+  $("#add-button").hide()
 }
 
-function back (event) {
-    event.preventDefault()
-    afterLogin()
-    $("#card-storify").show()
+function back(event) {
+  event.preventDefault()
+  afterLogin()
+  $("#card-storify").show()
 }
 
-// function tts (event) {
-//     event.preventDefault()
-//     afterLogin()
-//     $("#card-storify").show()
-// }
+function tts(event) {
+  event.preventDefault()
+  // afterLogin()
+  var paramsNgomong = $('#story-content').val()
+  ngomongKek(paramsNgomong)
+  // $("#card-storify").show()
+}
 
-function more (id, event) {
-    event.preventDefault()
-    // $("#card-detail").show()
-    // $("#card-storify").hide()
-    // $("#add-button").hide()
-    // $("#detail-button").show()
-    // $("#tts-button").show()
-    // $('#form-add').hide()
+function more(id, event) {
+  event.preventDefault()
+  // $("#card-detail").show()
+  // $("#card-storify").hide()
+  // $("#add-button").hide()
+  // $("#detail-button").show()
+  // $("#tts-button").show()
+  // $('#form-add').hide()
 
-    $.ajax({
-        method: "GET",
-        url: `http://localhost:3000/stories/${id}`,
-        headers:{
-            access_token : localStorage.token
-        }
+  $.ajax({
+    method: "GET",
+    url: `http://localhost:3000/stories/${id}`,
+    headers: {
+      access_token: localStorage.token
+    }
+  })
+    .done(storify => {
+      var textReplacer = storify.content.replace(/\r?\n|\r/g, "")
+      console.log(textReplacer, "ini di done");
+
+
+      $('#title-detail').text('Please Scan QR to read full Story on your device')
+      // $('#content-detail').text(storify.content)
+      $('#img-detail').attr('src', storify.qrCode)
+      $('#story-content').val(textReplacer)
+      $('#storify-label').text(storify.title)
+      $('#exampleModal').modal('show')
     })
-    .done( storify => {
-        $('#title-detail').text('Please Scan QR to read full Story on your device')
-        // $('#content-detail').text(storify.content)
-        $('#img-detail').attr('src',storify.qrCode)
-        $('#storify-label').text(storify.title)
-        $('#exampleModal').modal('show')
-    })
-    .fail ( err => {
-        // console.log("error", err.responseJSON)
-        // $('#errorAddTodo').text(err.responseJSON.message).show()
+    .fail(err => {
+      // console.log("error", err.responseJSON)
+      // $('#errorAddTodo').text(err.responseJSON.message).show()
 
     })
-    .always ( () => {
-        console.log("ini always")
+    .always(() => {
+      console.log("ini always")
     })
 }
 
@@ -270,3 +335,17 @@ function more (id, event) {
 //     $('.hardcode-list').append('#card-1')
 // }
 
+function ngomongKek(text) {
+  console.log(text, "INI DI NGOMONGKEK");
+  responsiveVoice.speak(text)
+}
+
+function stopVoice(event) {
+  console.log("MASUK SINI");
+
+  responsiveVoice.cancel()
+}
+
+$("#exampleModal").on("hidden", function () {
+  $('#result').html('yes,result');
+});
