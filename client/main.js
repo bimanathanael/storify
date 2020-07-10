@@ -70,31 +70,43 @@ function getStorify() {
   let tesData = [
     {
       id: 1,
+      judul: "si kucing",
       nama: "tom"
     },
     {
       id: 2,
+      judul: "kata tambahan",
       nama: "and"
     },
     {
       id: 3,
+      judul: "si tikus",
       nama: "jerry"
+    },
+    {
+      id: 4,
+      judul: "si beruang",
+      nama: "You know you're in love when you can't fall asleep because reality is finally better than your dreams."
     }
   ]
 
+
   $("#content-card").empty()
 
-  // LOOPING DATA HASIL FETCH 
+  // LOOPING DATA HASIL FETCH
+  // el.nama buat masukin konten
+  // el.id buat nentuin cerita nya
+  // el.judul buat judul
 
   tesData.forEach(el => {
     $("#content-card").append(`
     <div class="card bg-light mb-3" style="max-width: 18rem;">
     <div class="card-header" style="text-align: center;">Header</div>
     <div class="card-body">
-    <h5 class="card-title">Light card title</h5>
+    <h5 class="card-title">${el.judul}</h5>
     <p class="card-text">${el.nama}</p>
-    <input type="text" value=${el.nama} hidden class="${el.id}">
-    <button onclick="ngomongKek($('.${el.id}').val())" type="button" value="Play">Play</button>
+    <input type="textarea" value="${el.nama}" hidden class="${el.id}">
+    <button onclick="ngomongKek($('.${el.id}').val())" type="button" value="Play" class="btn btn-warning">Play</button>
     </div>
     </div>
     `)
