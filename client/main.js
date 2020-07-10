@@ -61,7 +61,9 @@ function onSignIn(googleUser) {
     data: { id_token }
   })
     .done(todos => {
+      console.log(todos.access_token, "INI ACCESS TOKEN");
       localStorage.token = todos.access_token
+      afterLogin()
     })
     .fail(err => {
       console.log(err)
@@ -235,6 +237,7 @@ function add(event) {
       afterLogin()
       $('#title').val("")
       $('#content').val("")
+      $('#form-add').hide()
     })
     .fail(err => {
       console.log("error", err.responseJSON)
